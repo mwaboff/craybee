@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Generated frontend bundle -- built by setup.sh / the wheel build hook
+backend/static/
+frontend/dist/
+frontend/node_modules/
+
+# Local config and data
+.env
+*.db
+
+# Editors
+.idea/
+.vscode/
+.DS_Store
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/

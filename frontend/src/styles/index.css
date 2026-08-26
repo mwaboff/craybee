@@ -1,0 +1,60 @@
+:root {
+  --bg: #0f1115;
+  --fg: #e8e8ea;
+  --muted: #8b8f98;
+  --accent: #f5c518;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font: 15px/1.5 ui-sans-serif, system-ui, sans-serif;
+}
+
+.app { display: flex; flex-direction: column; height: 100vh; }
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid #22252c;
+}
+
+.brand { display: flex; align-items: center; gap: 0.6rem; }
+
+.brand-mark { display: block; object-fit: contain; }
+
+h1 { font-size: 1rem; margin: 0; letter-spacing: 0.04em; }
+
+
+button {
+  background: #1a1d24;
+  color: var(--fg);
+  border: 1px solid #2a2e37;
+  border-radius: 6px;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+}
+
+
+main { flex: 1; overflow: auto; padding: 1.25rem; }
+
+.chat form { display: flex; gap: 0.5rem; }
+
+.chat input {
+  flex: 1;
+  background: #14171d;
+  border: 1px solid #2a2e37;
+  border-radius: 6px;
+  color: var(--fg);
+  padding: 0.5rem 0.75rem;
+}
+
+.transcript { display: block; margin-top: 1rem; }
+
+.status { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; }
