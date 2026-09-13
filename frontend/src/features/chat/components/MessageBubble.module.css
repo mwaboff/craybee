@@ -1,0 +1,26 @@
+.bubble {
+  max-width: 80%;
+  border-radius: var(--radius);
+  padding: 0.6rem 0.85rem;
+}
+
+.user {
+  align-self: flex-end;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.assistant {
+  align-self: flex-start;
+}
+
+.plain {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.footer {
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-size: 0.75rem;
+}

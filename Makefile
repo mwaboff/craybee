@@ -14,6 +14,7 @@ build:
 
 test:
 	uv run pytest
+	cd frontend && npm test
 
 lint:
 	uv run ruff check backend tests

@@ -1,0 +1,35 @@
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.content {
+  flex: 1;
+  font-size: 0.85rem;
+}
+
+.dismiss {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.error {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.success {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.info {
+  border-color: var(--accent);
+  color: var(--accent);
+}

@@ -1,0 +1,79 @@
+.panel {
+  composes: panel from "../../../components/ui/Modal.module.css";
+  width: 880px;
+  max-width: 95vw;
+  height: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  width: 200px;
+  flex-shrink: 0;
+  padding: 1rem 0.75rem;
+  border-right: 1px solid var(--border-subtle);
+}
+
+.nav button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: none;
+  background: transparent;
+  text-align: left;
+  border-radius: var(--radius);
+}
+
+.nav button[aria-current="page"] {
+  background: var(--surface-2);
+  color: var(--fg);
+}
+
+.pane {
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+  padding: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .body {
+    flex-direction: column;
+  }
+
+  .nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: auto;
+    padding: 0.75rem;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .pane {
+    width: 100%;
+  }
+}

@@ -8,13 +8,13 @@ router = APIRouter(prefix="/runs", tags=["runs"])
 
 
 def _summary(run: Run) -> RunSummary:
-    return RunSummary(id=run.id, prompt=run.prompt, status=run.status)
+    return RunSummary(id=run.id, prompt=run.prompt, status=run.status, conversation_id=run.conversation_id)
 
 
 @router.post("", status_code=201)
 async def create_run(body: RunCreate) -> RunSummary:
     """Start a run and return immediately; progress arrives over /ws/runs/{id}."""
-    return _summary(runner.start(body.prompt))
+    return _summary(runner.start(body.prompt, body.conversation_id))
 
 
 @router.get("")
@@ -25,7 +25,13 @@ async def list_runs() -> list[RunSummary]:
 @router.get("/{run_id}")
 async def get_run(run_id: str) -> RunDetail:
     run = registry.get(run_id)
-    return RunDetail(id=run.id, prompt=run.prompt, status=run.status, events=run.events)
+    return RunDetail(
+        id=run.id,
+        prompt=run.prompt,
+        status=run.status,
+        conversation_id=run.conversation_id,
+        events=run.events,
+    )
 
 
 @router.post("/{run_id}/cancel")

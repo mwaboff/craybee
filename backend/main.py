@@ -1,3 +1,5 @@
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -8,13 +10,28 @@ from backend.api.v1 import api_router
 from backend.api.v1.routes import ws
 from backend.config import get_settings
 from backend.core.exceptions import register_exception_handlers
+from backend.database import db
+from backend.logging_config import configure_logging
+from backend.services import llm_servers
 
 STATIC_DIR = Path(__file__).parent / "static"
 
 
+@asynccontextmanager
+async def lifespan(app: FastAPI) -> AsyncIterator[None]:
+    await db.migrate()
+    async with db.session() as session:
+        await llm_servers.seed_from_settings(session, get_settings())
+    try:
+        yield
+    finally:
+        await db.dispose()
+
+
 def create_app() -> FastAPI:
+    configure_logging()
     settings = get_settings()
-    app = FastAPI(title=settings.app_name, debug=settings.debug)
+    app = FastAPI(title=settings.app_name, debug=settings.debug, lifespan=lifespan)
 
     register_exception_handlers(app)
 

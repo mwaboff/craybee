@@ -12,12 +12,16 @@ from dataclasses import dataclass, field
 
 from backend.core.exceptions import NotFoundError
 from backend.orchestration.events import RunEvent, RunStatus
+from backend.services.llm.conversation import Turn
+
+LIVE_STATUSES = {RunStatus.PENDING, RunStatus.RUNNING}
 
 
 @dataclass
 class Run:
     id: str
     prompt: str
+    conversation_id: str
     status: RunStatus = RunStatus.PENDING
     events: list[RunEvent] = field(default_factory=list)
     subscribers: set[asyncio.Queue[RunEvent]] = field(default_factory=set)
@@ -33,8 +37,8 @@ class RunRegistry:
     def __init__(self) -> None:
         self._runs: dict[str, Run] = {}
 
-    def create(self, prompt: str) -> Run:
-        run = Run(id=uuid.uuid4().hex, prompt=prompt)
+    def create(self, prompt: str, conversation_id: str) -> Run:
+        run = Run(id=uuid.uuid4().hex, prompt=prompt, conversation_id=conversation_id)
         self._runs[run.id] = run
         return run
 
@@ -69,3 +73,36 @@ class RunRegistry:
 
 
 registry = RunRegistry()
+
+
+@dataclass
+class ConversationRecord:
+    id: str
+    turns: list[Turn] = field(default_factory=list)
+    active_run: Run | None = None
+
+    @property
+    def live_run(self) -> Run | None:
+        """The active run, if it is still pending or running; None once it settles."""
+        if self.active_run is not None and self.active_run.status in LIVE_STATUSES:
+            return self.active_run
+        return None
+
+
+class ConversationRegistry:
+    def __init__(self) -> None:
+        self._conversations: dict[str, ConversationRecord] = {}
+
+    def create(self) -> ConversationRecord:
+        record = ConversationRecord(id=uuid.uuid4().hex)
+        self._conversations[record.id] = record
+        return record
+
+    def get(self, conversation_id: str) -> ConversationRecord:
+        record = self._conversations.get(conversation_id)
+        if record is None:
+            raise NotFoundError(f"No conversation with id {conversation_id}")
+        return record
+
+
+conversations = ConversationRegistry()

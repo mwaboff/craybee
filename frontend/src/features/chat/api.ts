@@ -1,9 +1,14 @@
 import { api } from "@/api/client";
-import type { RunSummary } from "@/types/run";
+import type { ConversationDetail } from "@/features/chat/types";
+import type { RunCreate, RunSummary } from "@/types/run";
 
 export const runsApi = {
-  create: (prompt: string) =>
-    api<RunSummary>("/runs", { method: "POST", body: JSON.stringify({ prompt }) }),
+  create: (body: RunCreate) =>
+    api<RunSummary>("/runs", { method: "POST", body: JSON.stringify(body) }),
   list: () => api<RunSummary[]>("/runs"),
   cancel: (id: string) => api<RunSummary>(`/runs/${id}/cancel`, { method: "POST" }),
+};
+
+export const conversationsApi = {
+  get: (id: string) => api<ConversationDetail>(`/conversations/${id}`),
 };

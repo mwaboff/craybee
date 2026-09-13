@@ -17,6 +17,9 @@ cli = typer.Typer(help="craybee - agent orchestration harness", no_args_is_help=
 REPO_ROOT = Path(__file__).resolve().parent.parent
 FRONTEND = REPO_ROOT / "frontend"
 
+db_cli = typer.Typer(help="Database migrations.")
+cli.add_typer(db_cli, name="db")
+
 
 def _in_source_checkout() -> bool:
     return (FRONTEND / "package.json").exists()
@@ -102,6 +105,28 @@ def build() -> None:
     typer.secho(f"Built frontend into {static}", fg=typer.colors.GREEN)
 
 
+@db_cli.command("upgrade")
+def db_upgrade(revision: str = typer.Argument("head")) -> None:
+    """Apply pending migrations (the server also does this on startup)."""
+    from alembic import command
+
+    from backend.database import alembic_config
+
+    command.upgrade(alembic_config(get_settings().database_url), revision)
+
+
+@db_cli.command("revision")
+def db_revision(message: str = typer.Option(..., "-m", "--message")) -> None:
+    """Autogenerate a migration from model changes (source checkout only)."""
+    from alembic import command
+
+    from backend.database import alembic_config
+
+    command.revision(
+        alembic_config(get_settings().database_url), message=message, autogenerate=True
+    )
+
+
 def _new_process_group() -> dict[str, object]:
     """Popen kwargs that put the child in its own group, so it can be killed as one."""
     if sys.platform == "win32":
@@ -117,7 +142,7 @@ def _terminate_group(process: subprocess.Popen) -> None:
             process.send_signal(signal.CTRL_BREAK_EVENT)
         else:
             os.killpg(os.getpgid(process.pid), signal.SIGTERM)
-    except (ProcessLookupError, PermissionError, OSError):
+    except ProcessLookupError, PermissionError, OSError:
         process.terminate()
 
     try:
