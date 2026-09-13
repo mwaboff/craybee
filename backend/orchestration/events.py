@@ -16,7 +16,7 @@ class RunStatus(StrEnum):
 class RunEvent(BaseModel):
     """A single item in a run's event log, also the WebSocket wire format."""
 
-    type: Literal["status", "token", "node", "log", "error"]
+    type: Literal["status", "token", "usage", "node", "log", "error"]
     run_id: str
     at: datetime = Field(default_factory=lambda: datetime.now(UTC))
     data: dict[str, Any] = Field(default_factory=dict)

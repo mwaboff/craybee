@@ -16,6 +16,16 @@ class NotFoundError(CraybeeError):
     status_code = 404
 
 
+class ConflictError(CraybeeError):
+    status_code = 409
+
+
+class LLMError(CraybeeError):
+    """Provider failure (bad URL, auth, subprocess exit). 502 when raised from a route."""
+
+    status_code = 502
+
+
 def register_exception_handlers(app: FastAPI) -> None:
     @app.exception_handler(CraybeeError)
     async def _handle(request: Request, exc: CraybeeError) -> JSONResponse:
